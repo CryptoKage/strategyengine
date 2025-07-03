@@ -8,15 +8,7 @@
   ],
   "routes": [
     {
-      "src": "/ui",
-      "dest": "api/main_api.py"
-    },
-    {
-      "src": "/analyze_ui_with_strategy",
-      "dest": "api/main_api.py"
-    },
-    {
-      "src": "/",
+      "src": "/(.*)",
       "dest": "api/main_api.py"
     }
   ]
