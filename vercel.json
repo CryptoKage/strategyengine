@@ -1,8 +1,23 @@
 {
-    "rewrites": [
-        {
-            "source": "/(.*)",
-            "destination": "/api/main_api"
-        }
-    ]
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/main_api.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/ui",
+      "dest": "api/main_api.py"
+    },
+    {
+      "src": "/analyze_ui_with_strategy",
+      "dest": "api/main_api.py"
+    },
+    {
+      "src": "/",
+      "dest": "api/main_api.py"
+    }
+  ]
 }

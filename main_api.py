@@ -1,25 +1,16 @@
-# api/main_api.py (Minimal Vercel Test Version with root_path)
+# api/main_api.py (Minimal Vercel Test Version for Explicit Routing)
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
-import os
 
-# Get the root path from Vercel's environment variables if it exists
-# This helps FastAPI generate correct docs and URLs behind Vercel's proxy
-ROOT_PATH = os.getenv("ROOT_PATH", "") 
+# No root_path needed for this explicit routing method
+app = FastAPI()
 
-app = FastAPI(root_path=ROOT_PATH)
-
-# The root of our app, now at the root of the deployment
+# This handles requests to the root: your-url.vercel.app/
 @app.get("/")
 def read_root():
-    return {"message": "API Root is active. Go to /ui to see the page."}
+    return {"message": "API Root is active. Please navigate to /ui"}
 
-# This will handle requests to your-url.com/ui
+# This handles requests to: your-url.vercel.app/ui
 @app.get("/ui")
 def get_ui_page():
-    return HTMLResponse("<h1>UI Page Loaded Successfully! Vercel Routing Works!</h1>")
-        
-# This will handle requests to your-url.com/api/test
-@app.get("/api/test")
-def test_endpoint():
-    return {"status": "ok", "endpoint": "/api/test"}
+    return HTMLResponse("<h1>UI Page Loaded! Explicit routing works.</h1>")
