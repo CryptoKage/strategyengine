@@ -1,19 +1,15 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api/main_api.py",
-      "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "15mb",
-        "pythonVersion": "3.11" 
-      }
+  "functions": {
+    "api/main_api.py": {
+      "runtime": "vercel-python@3.0.0",
+      "pythonVersion": "3.9",
+      "maxLambdaSize": "25mb"
     }
-  ],
-  "routes": [
+  },
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "api/main_api.py"
+      "source": "/(.*)",
+      "destination": "/api/main_api"
     }
   ]
 }
