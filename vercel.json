@@ -1,9 +1,8 @@
 {
   "functions": {
     "api/main_api.py": {
-      "runtime": "vercel-python@3.0.0",
-      "pythonVersion": "3.9",
-      "maxLambdaSize": "25mb"
+      "maxLambdaSize": "25mb",
+      "runtime": "vercel-python@3.0.0"
     }
   },
   "rewrites": [
