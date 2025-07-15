@@ -1,370 +1,237 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyper-strategies | Strategy Analyzer</title>
-    <!-- TradingView Lightweight Charts Library -->
-    <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
-    <style>
-        /* ========== Root Variables ========== */
-        :root {
-            --bg-color: #0b0f1a;
-            --bg-elevated: #161b27;
-            --text-color: #e1e1e6;
-            --text-muted: #8d93a1;
-            --primary: #3fbaf3;
-            --primary-hover: #70d4fc;
-            --accent: #16a085;
-            --border-color: #2c2f36;
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            --signal-buy-bg: rgba(22, 160, 133, 0.15);
-            --signal-buy-text: #16a085;
-            --signal-sell-bg: rgba(214, 48, 49, 0.15);
-            --signal-sell-text: #d63031;
-            --signal-hold-bg: rgba(99, 110, 114, 0.2);
-            --signal-hold-text: #d1d4dc;
-            --input-bg: #2d3445;
-        }
-
-        /* ========== Base Styles ========== */
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: var(--font-family);
-            margin: 0;
-            padding: 20px;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-        * { box-sizing: border-box; }
-        h1, h2, h3, h4 { color: #ffffff; font-weight: 600; margin: 0 0 10px 0; }
-        h1 { font-size: 1.8em; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 25px; }
-        h2 { font-size: 1.5em; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
-        h3 { font-size: 1.2em; color: var(--primary); margin-bottom: 15px; }
-        
-        /* ========== Layout & Card ========== */
-        .container { display: flex; flex-wrap: wrap; gap: 20px; }
-        .config-panel { flex: 1 1 350px; }
-        .analysis-panel { flex: 2 1 600px; }
-        .card {
-            background-color: var(--bg-elevated);
-            border: 1px solid var(--border-color);
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-        
-        /* ========== Form Elements ========== */
-        label { display: block; margin-top: 18px; font-weight: 500; font-size: 0.9em; color: var(--text-muted); margin-bottom: 5px;}
-        input, select, textarea {
-            background-color: var(--bg-color);
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            color: var(--text-color);
-            border-radius: 6px;
-            font-size: 1em;
-            width: 100%;
-        }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
-        button {
-            background-color: var(--primary); color: #000;
-            border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold;
-            cursor: pointer; transition: background-color 0.2s;
-            width: 100%; margin-top: 20px; font-size: 1.1em;
-        }
-        button:hover { background-color: var(--primary-hover); }
-        #strategy_params_container { margin-top: 10px; padding-left: 10px; border-left: 2px solid var(--border-color);}
-
-        
-
-        /* ========== Chart & Results ========== */
-        #tvchart { width: 100%; height: 400px; }
-        .results { margin-top: 20px; }
-        .results pre { background-color: var(--bg-color); padding: 15px; border-radius: 6px; border: 1px solid var(--border-color); white-space: pre-wrap; word-wrap: break-word; font-size: 0.9em; line-height: 1.6; }
-        .error { color: var(--signal-sell-text); font-weight: bold; border: 1px solid var(--signal-sell-text); padding:10px; background-color: var(--signal-sell-bg); margin-top:15px; border-radius: 4px; }
-        
-        .strategy-signal { margin-bottom: 20px; padding: 15px; border-radius: 8px; text-align: center; }
-        .strategy-signal strong { display: block; font-size: 1.2em; margin-bottom: 5px; }
-        .strategy-signal small { font-size: 0.9em; color: var(--text-muted); font-style: normal; }
-
-        .buy { background-color: var(--signal-buy-bg); color: var(--signal-buy-text); border: 1px solid var(--signal-buy-text); }
-        .sell { background-color: var(--signal-sell-bg); color: var(--signal-sell-text); border: 1px solid var(--signal-sell-text); }
-        .hold { background-color: var(--signal-hold-bg); color: var(--signal-hold-text); border: 1px solid var(--signal-hold-text); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hyper-strategies | Strategy Analyzer</title>
+  <!-- TradingView Lightweight Charts Library -->
+  <script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+  <style>
+    /* ========== Root Variables ========== */
+    :root {
+      --bg-color: #0b0f1a;
+      --bg-elevated: #161b27;
+      --text-color: #e1e1e6;
+      --text-muted: #8d93a1;
+      --primary: #3fbaf3;
+      --primary-hover: #70d4fc;
+      --accent: #16a085;
+      --border-color: #2c2f36;
+      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      --signal-buy-bg: rgba(22, 160, 133, 0.15);
+      --signal-buy-text: #16a085;
+      --signal-sell-bg: rgba(214, 48, 49, 0.15);
+      --signal-sell-text: #d63031;
+      --signal-hold-bg: rgba(99, 110, 114, 0.2);
+      --signal-hold-text: #d1d4dc;
+      --input-bg: #2d3445;
+    }
+    /* ========== Base Styles ========== */
+    body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-family); margin: 0; padding: 20px; font-size: 16px; line-height: 1.5; }
+    * { box-sizing: border-box; }
+    h1 { font-size: 1.8em; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 25px; }
+    h2 { font-size: 1.5em; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; color: #ffffff; font-weight: 600; }
+    h3 { font-size: 1.2em; color: var(--primary); margin-bottom: 15px; }
+    .container { display: flex; flex-wrap: wrap; gap: 20px; }
+    .config-panel { flex: 1 1 350px; }
+    .analysis-panel { flex: 2 1 600px; }
+    .card { background-color: var(--bg-elevated); border: 1px solid var(--border-color); padding: 25px; border-radius: 12px; margin-bottom: 20px; }
+    label { display: block; margin-top: 18px; font-weight: 500; font-size: 0.9em; color: var(--text-muted); margin-bottom: 5px;}
+    input, select, textarea { background-color: var(--bg-color); border: 1px solid var(--border-color); padding: 10px; color: var(--text-color); border-radius: 6px; font-size: 1em; width: 100%; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); }
+    button { background-color: var(--primary); color: #000; border: none; padding: 12px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; width: 100%; margin-top: 20px; font-size: 1.1em; }
+    button:hover { background-color: var(--primary-hover); }
+    #strategy_params_container { margin-top: 10px; padding-left: 10px; border-left: 2px solid var(--border-color); }
+    #tvchart { width: 100%; height: 400px; }
+    .results { margin-top: 20px; }
+    .results pre { background-color: var(--bg-color); padding: 15px; border-radius: 6px; border: 1px solid var(--border-color); white-space: pre-wrap; word-wrap: break-word; font-size: 0.9em; line-height: 1.6; }
+    .error { color: var(--signal-sell-text); font-weight: bold; border: 1px solid var(--signal-sell-text); padding:10px; background-color: var(--signal-sell-bg); margin-top:15px; border-radius: 4px; }
+    .strategy-signal { margin-bottom: 20px; padding: 15px; border-radius: 8px; text-align: center; }
+    .strategy-signal strong { display: block; font-size: 1.2em; margin-bottom: 5px; }
+    .strategy-signal small { font-size: 0.9em; color: var(--text-muted); font-style: normal; }
+    .buy { background-color: var(--signal-buy-bg); color: var(--signal-buy-text); border: 1px solid var(--signal-buy-text); }
+    .sell { background-color: var(--signal-sell-bg); color: var(--signal-sell-text); border: 1px solid var(--signal-sell-text); }
+    .hold { background-color: var(--signal-hold-bg); color: var(--signal-hold-text); border: 1px solid var(--signal-hold-text); }
+  </style>
 </head>
 <body>
-    <h1>Hyper-strategies | Automated Analysis Engine</h1>
-  <!-- DEBUG: raw data -->
-  <pre id="raw-data-debug">{{ analysis_results.raw_ohlcv_data_for_chart | tojson(indent=2) }}</pre>
+  <h1>Hyper-strategies | Automated Analysis Engine</h1>
 
-  <!-- DEBUG: overlay if used -->
-  <pre id="overlay-data-debug">{{ analysis_results.strategy_specific_chart_data | tojson(indent=2) }}</pre>
+  {% if analysis_results %}
+    <pre id="raw-data-debug">{{ analysis_results.raw_ohlcv_data_for_chart | tojson(indent=2) }}</pre>
+    <pre id="overlay-data-debug">{{ analysis_results.strategy_specific_chart_data | tojson(indent=2) }}</pre>
+  {% endif %}
 
-    <div class="container">
-        <!-- Left Panel for Configuration -->
-        <div class="config-panel">
-            <div class="card">
-                <h3>Configuration</h3>
-                <form action="/analyze_ui_with_strategy" method="get" id="analysisForm">
-                    <label for="exchange">Exchange:</label>
-                    <select id="exchange" name="exchange">
-                        <option value="okx" {% if request_params and request_params.exchange == "okx" %}selected{% endif %}>OKX</option>
-                        <option value="bybit" {% if request_params and request_params.exchange == "bybit" %}selected{% endif %}>Bybit</option>
-                        <option value="binance" {% if request_params and request_params.exchange == "binance" %}selected{% endif %}>Binance</option>
-                    </select>
-
-                    <label for="symbol">Symbol (e.g., BTC-USDT-SWAP):</label>
-                    <input type="text" id="symbol" name="symbol" value="{{ request_params.symbol if request_params and request_params.symbol is not none else 'BTC-USDT-SWAP' }}" required>
-
-                    <label for="timeframe">Timeframe:</label>
-                    <select id="timeframe" name="timeframe">
-                        <option value="15m" {% if request_params and request_params.timeframe == "15m" %}selected{% endif %}>15 Min</option>
-                        <option value="1h" {% if request_params and request_params.timeframe == "1h" %}selected{% endif %}>1 Hour</option>
-                        <option value="4h" {% if request_params and request_params.timeframe == "4h" %}selected{% elif not request_params or request_params.timeframe is none %}selected{% endif %}>4 Hours</option>
-                        <option value="1d" {% if request_params and request_params.timeframe == "1d" %}selected{% endif %}>1 Day</option>
-                    </select>
-
-                    <label for="strategy_module_name">Select Strategy:</label>
-                    <select id="strategy_module_name" name="strategy_module_name">
-                        <option value="">-- No Strategy --</option>
-                        {% for module_key, strat_info in available_strategies.items() %}
-                        <option value="{{ module_key }}" {% if request_params and request_params.strategy_module_name == module_key %}selected{% endif %}>
-                            {{ strat_info.name }}
-                        </option>
-                        {% endfor %}
-                    </select>
-
-                    <div id="strategy_params_container">
-                        <!-- JS populates this -->
-                    </div>
-
-                    <label for="user_prompt_suffix">Optional: Custom LLM Instructions:</label>
-                    <textarea id="user_prompt_suffix" name="user_prompt_suffix" placeholder="e.g., Focus on risk factors for this strategy.">{{ request_params.user_prompt_suffix if request_params and request_params.user_prompt_suffix else '' }}</textarea>
-
-                    <button type="submit">Analyze</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Right Panel for Chart & Results -->
-        <div class="analysis-panel">
-            <div class="card">
-                <h2>Price Chart & Strategy Overlays</h2>
-                <div id="tvchart"></div>
-            </div>
-
-            {% if analysis_results or error_message %}
-            <div class="card results">
-                {% if analysis_results %}
-                    <h3>
-                        Analysis: {{ analysis_results.strategy_name | default('N/A') }} for {{ analysis_results.asset_analyzed | default('N/A') }} 
-                        ({{ analysis_results.exchange | default('N/A') }} - {{ analysis_results.timeframe | default('N/A') }})
-                    </h3>
-                    
-                    {% if analysis_results.strategy_signal and analysis_results.strategy_signal.signal %}
-                    <div class="strategy-signal 
-                        {% if 'BUY' in analysis_results.strategy_signal.signal.upper() %}buy
-                        {% elif 'SELL' in analysis_results.strategy_signal.signal.upper() %}sell
-                        {% else %}hold{% endif %}
-                    ">
-                        <strong>{{ analysis_results.strategy_signal.signal }}</strong>
-                        <small><em>Details: {{ analysis_results.strategy_signal.details | default('No details.') }}</em></small> 
-                    </div>
-                    {% else %}
-                    <div class="strategy-signal hold">
-                        <strong>N/A</strong>
-                        <small><em>Strategy signal not available or not run.</em></small>
-                    </div>
-                    {% endif %}
-
-                    <h4>Latest Indicators</h4>
-                    <pre>{% if analysis_results.latest_indicators and analysis_results.latest_indicators | length > 0 %}
-{%- for key, value in analysis_results.latest_indicators.items() %}{{ key }}: {{ value }}
-{%- endfor %}{% else %}Indicator data not available.{% endif %}
-                    </pre>
-
-                    <h4>LLM Summary</h4>
-                    <pre>{{ analysis_results.llm_analysis | default('LLM Analysis is currently disabled.') }}</pre>
-                {% endif %}
-
-                {% if error_message %}
-                    <div class="error">
-                        <h3>Error</h3>
-                        <p>{{ error_message }}</p>
-                    </div>
-                {% endif %}
-            </div>
-            {% endif %}
-        </div>
+  <div class="container">
+    <div class="config-panel">
+      <div class="card">
+        <h3>Configuration</h3>
+        <form action="/analyze_ui_with_strategy" method="get" id="analysisForm">
+          <!-- exchange, symbol, timeframe, strategy select, strategy_params_container, prompt textarea, submit button -->
+          <label for="exchange">Exchange:</label>
+          <select id="exchange" name="exchange">
+            <option value="okx" {% if request_params.exchange == "okx" %}selected{% endif %}>OKX</option>
+            <option value="bybit" {% if request_params.exchange == "bybit" %}selected{% endif %}>Bybit</option>
+            <option value="binance" {% if request_params.exchange == "binance" %}selected{% endif %}>Binance</option>
+          </select>
+          <label for="symbol">Symbol (e.g., BTC-USDT-SWAP):</label>
+          <input type="text" id="symbol" name="symbol" value="{{ request_params.symbol or 'BTC-USDT-SWAP' }}" required>
+          <label for="timeframe">Timeframe:</label>
+          <select id="timeframe" name="timeframe">
+            <option value="15m" {% if request_params.timeframe == "15m" %}selected{% endif %}>15 Min</option>
+            <option value="1h" {% if request_params.timeframe == "1h" %}selected{% endif %}>1 Hour</option>
+            <option value="4h" {% if request_params.timeframe == "4h" or not request_params.timeframe %}selected{% endif %}>4 Hours</option>
+            <option value="1d" {% if request_params.timeframe == "1d" %}selected{% endif %}>1 Day</option>
+          </select>
+          <label for="strategy_module_name">Select Strategy:</label>
+          <select id="strategy_module_name" name="strategy_module_name">
+            <option value="">-- No Strategy --</option>
+            {% for key, info in available_strategies.items() %}
+              <option value="{{ key }}" {% if request_params.strategy_module_name == key %}selected{% endif %}>{{ info.name }}</option>
+            {% endfor %}
+          </select>
+          <div id="strategy_params_container"></div>
+          <label for="user_prompt_suffix">Optional: Custom LLM Instructions:</label>
+          <textarea id="user_prompt_suffix" name="user_prompt_suffix">{{ request_params.user_prompt_suffix or '' }}</textarea>
+          <button type="submit">Analyze</button>
+        </form>
+      </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            console.log("DOM Loaded. Initializing chart script & UI (v_submit_fix)...");
+    <div class="analysis-panel">
+      <div class="card">
+        <h2>Price Chart & Strategy Overlays</h2>
+        <div id="tvchart"></div>
+      </div>
 
-            // --- JAVASCRIPT COLOR CONSTANTS (Mirroring CSS :root) ---
-            const THEME_COLORS = {
-                bgElevated: '#161b27', textColor: '#d1d4dc', borderColor: '#2c2f36',
-                primary: '#3fbaf3', accent: '#16a085', sellColor: '#d63031',
-                crosshairColor: '#ff00ff',
-                // Strategy Line Colors
-                emaFast: '#3fbaf3',     // Primary Blue
-                emaLong: '#ff69b4',     // Hot Pink
-                bbOuter: '#8d93a1',     // Muted Text
-                bbMiddle: '#ffff00',    // Yellow
-                kcOuter: '#cddc39',     // Lime
-                kcMiddle: '#ff9800',    // Amber
-                macdLine: '#4caf50',    // Green
-                macdSignal: '#f44336',  // Red
-                rsiLine: '#9c27b0',     // Purple
-                supertrendLine: '#76ff03' // Bright Lime
-            };
+      {% if analysis_results or error_message %}
+      <div class="card results">
+        {% if analysis_results %}
+          <h3>Analysis: {{ analysis_results.strategy_name or 'N/A' }} for {{ analysis_results.asset_analyzed or 'N/A' }} ({{ analysis_results.exchange or 'N/A' }} - {{ analysis_results.timeframe or 'N/A' }})</h3>
+          <div class="strategy-signal {% if 'BUY' in analysis_results.strategy_signal.signal.upper() %}buy{% elif 'SELL' in analysis_results.strategy_signal.signal.upper() %}sell{% else %}hold{% endif %}">
+            <strong>{{ analysis_results.strategy_signal.signal }}</strong>
+            <small><em>Details: {{ analysis_results.strategy_signal.details or 'No details.' }}</em></small>
+          </div>
+          <h4>Latest Indicators</h4>
+          <pre>{% for k,v in analysis_results.latest_indicators.items() %}{{ k }}: {{ v }}{% if not loop.last %}\n{% endif %}{% endfor %}</pre>
+          <h4>LLM Summary</h4>
+          <pre>{{ analysis_results.llm_analysis or 'LLM Analysis is currently disabled.' }}</pre>
+        {% endif %}
+        {% if error_message %}
+          <div class="error"><h3>Error</h3><p>{{ error_message }}</p></div>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
 
-            // --- Global Chart Variables ---
-            let chart = null; 
-            let candleSeries = null;
-            let volumeSeries = null;
-            let strategyLineSeriesGlobal = {}; 
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log("DOM Loaded. Initializing chart script...");
 
-            // --- Initial Data from Server (JINJA2) ---
-            const initialAnalysisResults = {{ analysis_results | tojson | safe if analysis_results else 'null' }};
-            const allStrategiesInfo = {{ available_strategies | tojson | safe if available_strategies else '{}' }};
-            const currentRequestParams = {{ request_params | tojson | safe if request_params else '{}' }};
+      const initialAnalysisResults = {{ analysis_results | tojson | safe if analysis_results else 'null' }};
+      const allStrategiesInfo = {{ available_strategies | tojson | safe if available_strategies else '{}' }};
+      const currentRequestParams = {{ request_params | tojson | safe if request_params else '{}' }};
 
-            // --- Chart Initialization Function ---
-            function initializeChart() {
-                const chartContainer = document.getElementById('tvchart');
-                if (!chartContainer) { console.error("CRITICAL: 'tvchart' NOT FOUND!"); return false; }
-                const chartProperties = { 
-                    width: chartContainer.clientWidth || 600, height: 400,
-                    layout: { backgroundColor: THEME_COLORS.bgElevated, textColor: THEME_COLORS.textColor },
-                    grid: { vertLines: { color: THEME_COLORS.borderColor }, horzLines: { color: THEME_COLORS.borderColor }},
-                    crosshair: { mode: LightweightCharts.CrosshairMode.Normal, vertLine: { color: THEME_COLORS.crosshairColor, style: LightweightCharts.LineStyle.Dotted }, horzLine: { color: THEME_COLORS.crosshairColor, style: LightweightCharts.LineStyle.Dotted }},
-                    rightPriceScale: { borderColor: THEME_COLORS.borderColor, mode: LightweightCharts.PriceScaleMode.Logarithmic },
-                    timeScale: { borderColor: THEME_COLORS.borderColor, timeVisible: true, secondsVisible: false },
-                };
-                if (typeof LightweightCharts === 'undefined') { console.error("CRITICAL: LightweightCharts global NOT FOUND."); return false; }
-                try {
-                    chart = LightweightCharts.createChart(chartContainer, chartProperties);
-                    candleSeries = chart.addCandlestickSeries({upColor: THEME_COLORS.accent, downColor: THEME_COLORS.sellColor, wickUpColor: THEME_COLORS.accent, wickDownColor: THEME_COLORS.sellColor, borderVisible: false,});
-                    volumeSeries = chart.addHistogramSeries({ priceFormat: { type: 'volume' }, priceScaleId: 'volume_scale'});
-                    chart.priceScale('volume_scale').applyOptions({ scaleMargins: { top: 0.8, bottom: 0 }, drawTicks: false });
-                    console.log("SUCCESS: Base chart series initialized.");
-                    return true;
-                } catch (e) { console.error("EXCEPTION during chart/series initialization:", e); return false; }
-            }
+      const THEME_COLORS = {
+        bgElevated: '#161b27', textColor: '#d1d4dc', borderColor: '#2c2f36',
+        accent: '#16a085', sellColor: '#d63031', crosshairColor: '#ff00ff',
+        emaFast: '#3fbaf3', emaLong: '#ff69b4', bbOuter: '#8d93a1', bbMiddle: '#ffff00',
+        kcOuter: '#cddc39', kcMiddle: '#ff9800', macdLine: '#4caf50', macdSignal: '#f44336', supertrendLine: '#76ff03'
+      };
 
-            // --- Function to update chart with ALL data ---
-            window.updateFullChart = function(candleData, strategySpecificChartData) {
-                if (!chart || !candleSeries || !volumeSeries) { console.error("updateFullChart: Chart not initialized!"); return; }
-                if (candleData && candleData.length > 0) {
-                    candleSeries.setData(candleData.map(d => ({ time: d.timestamp / 1000, open: parseFloat(d.open), high: parseFloat(d.high), low: parseFloat(d.low), close: parseFloat(d.close) })));
-                    volumeSeries.setData(candleData.map(d => ({ time: d.timestamp / 1000, value: parseFloat(d.volume), color: parseFloat(d.close) >= parseFloat(d.open) ? 'rgba(22, 160, 133, 0.5)' : 'rgba(214, 48, 49, 0.5)' })));
-                } else { candleSeries.setData([]); volumeSeries.setData([]); }
-                for (const key in strategyLineSeriesGlobal) { if (strategyLineSeriesGlobal[key]) { try { chart.removeSeries(strategyLineSeriesGlobal[key]); } catch(e){} } }
-                strategyLineSeriesGlobal = {};
-                if (strategySpecificChartData && typeof strategySpecificChartData === 'object') {
-                    for (const seriesKey in strategySpecificChartData) {
-                        const seriesData = strategySpecificChartData[seriesKey];
-                        if (seriesData && seriesData.length > 0) {
-                            let lineColor = '#ffffff'; let seriesTitle = seriesKey.replace(/_/g, ' ').toUpperCase(); let lineWidth = 1.5;
-                            const sk = seriesKey.toLowerCase(); 
-                            if (sk.includes('ema_fast') || sk.includes('sma_short')) { lineColor = THEME_COLORS.emaFast; }
-                            else if (sk.includes('ema_long') || sk.includes('sma_long')) { lineColor = THEME_COLORS.emaLong; }   
-                            else if (sk.includes('bband_upper') || sk.includes('bband_lower')) { lineColor = THEME_COLORS.bbOuter; lineWidth=1; } 
-                            else if (sk.includes('bband_middle')) { lineColor = THEME_COLORS.bbMiddle; lineWidth=1; } 
-                            else if (sk.includes('keltner_upper') || sk.includes('keltner_lower')) { lineColor = THEME_COLORS.kcOuter; lineWidth=1; }
-                            else if (sk.includes('keltner_middle')) { lineColor = THEME_COLORS.kcMiddle; lineWidth=1; }
-                            else if (sk.includes('macd_line')) { lineColor = THEME_COLORS.macdLine;} 
-                            else if (sk.includes('macd_signal')) { lineColor = THEME_COLORS.macdSignal;} 
-                            else if (sk.includes('supertrend')) { lineColor = THEME_COLORS.supertrendLine; }
-                            // Add more styles for other indicators here...
-                            
-                            try {
-                                strategyLineSeriesGlobal[seriesKey] = chart.addLineSeries({ color: lineColor, lineWidth: lineWidth, priceLineVisible: false, lastValueVisible: true, title: seriesTitle });
-                                strategyLineSeriesGlobal[seriesKey].setData(seriesData.map(d => ({ time: d.time / 1000, value: parseFloat(d.value) })));
-                            } catch (e) { console.error(`Error adding overlay ${seriesKey}:`, e); }
-                        }
-                    }
-                }
-                if (chart) chart.timeScale().fitContent();
-            };
-            
-            // --- Strategy Parameter UI Logic ---
-            const strategySelect = document.getElementById('strategy_module_name');
-            const paramsContainer = document.getElementById('strategy_params_container');
-            
-            window.updateStrategyParamsUI = function() {
-                if (!strategySelect || !paramsContainer || !allStrategiesInfo) return;
-                const selectedStrategyKey = strategySelect.value;
-                paramsContainer.innerHTML = '';
-                if (selectedStrategyKey && allStrategiesInfo[selectedStrategyKey] && allStrategiesInfo[selectedStrategyKey].params_ui) {
-                    const uiParams = allStrategiesInfo[selectedStrategyKey].params_ui;
-                    for (const paramKeyInFile in uiParams) {
-                        const paramInfo = uiParams[paramKeyInFile];
-                        const label = document.createElement('label'); label.htmlFor = paramKeyInFile; 
-                        label.textContent = paramInfo.label || paramKeyInFile;
-                        
-                        let inputElement;
-                        let valueToSet = (currentRequestParams && currentRequestParams[paramKeyInFile] !== undefined) 
-                                          ? currentRequestParams[paramKeyInFile] 
-                                          : (paramInfo.default !== undefined ? paramInfo.default : '');
+      let chart = null, candleSeries = null, volumeSeries = null, strategyLines = {};
 
-                        if (paramInfo.type === 'select' && paramInfo.options) {
-                            inputElement = document.createElement('select');
-                            paramInfo.options.forEach(optValue => {
-                                const option = document.createElement('option'); 
-                                option.value = optValue; option.textContent = optValue;
-                                if (String(valueToSet) === String(optValue)) option.selected = true;
-                                inputElement.appendChild(option);
-                            });
-                        } else { 
-                            inputElement = document.createElement('input');
-                            inputElement.type = paramInfo.type || 'text';
-                            inputElement.value = valueToSet;
-                            if (paramInfo.min !== undefined) inputElement.min = paramInfo.min;
-                            if (paramInfo.max !== undefined) inputElement.max = paramInfo.max;
-                            if (paramInfo.step !== undefined) inputElement.step = paramInfo.step;
-                        }
-                        inputElement.id = paramKeyInFile; inputElement.name = paramKeyInFile; 
-                        paramsContainer.appendChild(label);
-                        paramsContainer.appendChild(inputElement);
-                    }
-                }
-            };
-
-            // --- Form Submission Handling ---
-            const analysisForm = document.getElementById('analysisForm');
-            if (analysisForm) {
-                analysisForm.addEventListener('submit', function (event) {
-                    event.preventDefault(); 
-                    console.log("JS Intercepting form submission.");
-                    const params = new URLSearchParams();
-                    for (const element of analysisForm.elements) {
-                        if (element.name && element.value !== "" && element.type !== "submit") {
-                            params.append(element.name, element.value);
-                        }
-                    }
-                    const queryString = params.toString();
-                    console.log("Constructed Query String:", queryString);
-                    window.location.href = `/analyze_ui_with_strategy?${queryString}`;
-                });
-            }
-
-            // --- INITIALIZATION SEQUENCE ---
-            if (initializeChart()) {
-                if (strategySelect) { 
-                    strategySelect.addEventListener('change', window.updateStrategyParamsUI);
-                    window.updateStrategyParamsUI(); 
-                }
-                if (initialAnalysisResults && initialAnalysisResults.raw_ohlcv_data_for_chart) {
-                    window.updateFullChart(initialAnalysisResults.raw_ohlcv_data_for_chart, initialAnalysisResults.strategy_specific_chart_data);
-                } else {
-                    window.updateFullChart([], null); // Initialize empty chart
-                }
-            }
+      function initializeChart() {
+        const el = document.getElementById('tvchart');
+        if (!el) { console.error("Chart container (#tvchart) not found"); return false; }
+        chart = LightweightCharts.createChart(el, {
+          width: el.clientWidth || 600, height: 400,
+          layout: { backgroundColor: THEME_COLORS.bgElevated, textColor: THEME_COLORS.textColor },
+          grid: { vertLines: { color: THEME_COLORS.borderColor }, horzLines: { color: THEME_COLORS.borderColor }},
+          crosshair: { mode: LightweightCharts.CrosshairMode.Normal, vertLine: { color: THEME_COLORS.crosshairColor, style: LightweightCharts.LineStyle.Dotted }, horzLine: { color: THEME_COLORS.crosshairColor, style: LightweightCharts.LineStyle.Dotted }},
+          rightPriceScale: { borderColor: THEME_COLORS.borderColor },
+          timeScale: { borderColor: THEME_COLORS.borderColor, timeVisible: true }
         });
-    </script>
+        candleSeries = chart.addCandlestickSeries({ upColor: THEME_COLORS.accent, downColor: THEME_COLORS.sellColor, wickUpColor: THEME_COLORS.accent, wickDownColor: THEME_COLORS.sellColor, borderVisible: false });
+        volumeSeries = chart.addHistogramSeries({ priceFormat: { type: 'volume' }, priceScaleId: 'volume' });
+        chart.priceScale('volume').applyOptions({ scaleMargins: { top: 0.8, bottom: 0 }, drawTicks: false });
+        console.log("SUCCESS: Base chart series initialized.");
+        return true;
+      }
+
+      window.updateFullChart = (candles, overlays) => {
+        if (!chart) return;
+        if (Array.isArray(candles)) {
+          candleSeries.setData(candles.map(d => ({ time: d.timestamp / 1000, open: +d.open, high: +d.high, low: +d.low, close: +d.close })));
+          volumeSeries.setData(candles.map(d => ({
+            time: d.timestamp / 1000,
+            value: +d.volume,
+            color: +d.close >= +d.open ? 'rgba(22,160,133,0.5)' : 'rgba(214,48,49,0.5)'
+          })));
+        } else {
+          candleSeries.setData([]); volumeSeries.setData([]);
+        }
+        Object.values(strategyLines).forEach(s => chart.removeSeries(s));
+        strategyLines = {};
+        if (overlays && typeof overlays === 'object') {
+          console.log("Processing strategy overlays. Keys:", Object.keys(overlays));
+          Object.entries(overlays).forEach(([k, data]) => {
+            if (Array.isArray(data) && data.length) {
+              const ls = chart.addLineSeries({ color: THEME_COLORS.bbOuter, lineWidth: 1.5, priceLineVisible: false });
+              ls.setData(data.map(d => ({ time: d.time / 1000, value: +d.value })));
+              strategyLines[k] = ls; console.log(`Overlay ${k} added.`);
+            }
+          });
+        }
+        chart.timeScale().fitContent();
+      };
+
+      const stratSel = document.getElementById('strategy_module_name');
+      const paramsCont = document.getElementById('strategy_params_container');
+      const renderParamsUI = () => {
+        paramsCont.innerHTML = '';
+        const info = allStrategiesInfo[stratSel.value];
+        if (!info?.params_ui) return;
+        Object.entries(info.params_ui).forEach(([key, cfg]) => {
+          const lbl = document.createElement('label'); lbl.htmlFor = key; lbl.textContent = cfg.label || key;
+          let inp;
+          if (cfg.type === 'select' && cfg.options) {
+            inp = document.createElement('select');
+            cfg.options.forEach(opt => {
+              const o = document.createElement('option'); o.value = opt; o.textContent = opt;
+              if (`${currentRequestParams[key]}` === `${opt}`) o.selected = true;
+              inp.appendChild(o);
+            });
+          } else {
+            inp = document.createElement('input');
+            inp.type = cfg.type || 'text';
+            inp.value = currentRequestParams[key] ?? cfg.default ?? '';
+            if (cfg.min != null) inp.min = cfg.min;
+            if (cfg.max != null) inp.max = cfg.max;
+            if (cfg.step != null) inp.step = cfg.step;
+          }
+          inp.id = inp.name = key;
+          paramsCont.append(lbl, inp);
+        });
+      };
+
+      const form = document.getElementById('analysisForm');
+      form.addEventListener('submit', ev => {
+        ev.preventDefault();
+        const params = new URLSearchParams(new FormData(form)).toString();
+        console.log("Constructed Query:", params);
+        window.location.href = `/analyze_ui_with_strategy?${params}`;
+      });
+
+      if (initializeChart()) {
+        stratSel.addEventListener('change', renderParamsUI);
+        renderParamsUI();
+        if (initialAnalysisResults?.raw_ohlcv_data_for_chart) {
+          window.updateFullChart(initialAnalysisResults.raw_ohlcv_data_for_chart, initialAnalysisResults.strategy_specific_chart_data);
+        }
+      }
+    });
+  </script>
 </body>
 </html>
