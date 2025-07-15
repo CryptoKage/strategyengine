@@ -104,7 +104,7 @@ app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], all
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    return {"detail": "Not Found"}
+    return "<h1>Not Found</h1>"
 
 @app.get("/ui", response_class=HTMLResponse)
 async def get_ui(request: Request):
